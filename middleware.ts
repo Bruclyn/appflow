@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
 
   // Wrong role -> bounce to the correct dashboard (admins may go anywhere).
   if (isCandidateArea && role !== 'CANDIDATE' && !isAdmin) {
-    return NextResponse.redirect(new URL('/recruiter', req.url))
+    return NextResponse.redirect(new URL('/recruiter/dashboard', req.url))
   }
   if (isRecruiterArea && role !== 'RECRUITER' && !isAdmin) {
     return NextResponse.redirect(new URL('/dashboard', req.url))
@@ -35,5 +35,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/recruiter/:path*'],
+  matcher: ['/dashboard', '/dashboard/:path*', '/recruiter', '/recruiter/:path*'],
 }
