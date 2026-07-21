@@ -9,6 +9,12 @@
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+/* Offset anchored sections so the sticky navbar doesn't cover their headings. */
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 body {
