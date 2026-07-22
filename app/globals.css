@@ -29,3 +29,13 @@ body {
     width: 0;
   }
 }
+
+/* Toast auto-dismiss progress bar. */
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
