@@ -153,18 +153,23 @@ model Evidence {
 }
 
 model CapabilityProfile {
-  id             String    @id @default(cuid())
-  candidateId    String    @unique
-  primaryRole    String?
-  summary        String?   @db.Text
-  strengths      Json?
-  growthAreas    Json?
-  potentialRoles Json?
-  competencies   Json?
-  lastAnalyzedAt DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  candidate      CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  id              String    @id @default(cuid())
+  candidateId     String    @unique
+  primaryRole     String?
+  experienceLevel String?
+  overallScore    Int?
+  confidenceLevel String?
+  summary         String?   @db.Text
+  strengths       Json?
+  growthAreas     Json?
+  detectedSkills  Json?
+  potentialRoles  Json?
+  workPatterns    Json?
+  competencies    Json?
+  lastAnalyzedAt  DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  candidate       CandidateProfile @relation(fields: [candidateId], references: [id], onDelete: Cascade)
 }
 
 model Job {
