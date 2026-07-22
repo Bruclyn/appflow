@@ -19,10 +19,19 @@ const EVIDENCE_LABEL: Record<string, string> = {
   DOCUMENT: 'document',
 }
 
+/**
+ * Strengths have been stored in a few shapes across sprints: plain strings,
+ * `{ name }` from the GitHub-only analysis, and `{ area }` from the full
+ * capability analysis. Accept all three.
+ */
 function normalizeStrengths(value: unknown): string[] | null {
   if (!Array.isArray(value)) return null
   const list = value
-    .map((s) => (typeof s === 'string' ? s : ((s as { name?: string })?.name ?? '')))
+    .map((s) => {
+      if (typeof s === 'string') return s
+      const obj = s as { area?: string; name?: string }
+      return obj?.area ?? obj?.name ?? ''
+    })
     .filter(Boolean)
   return list.length > 0 ? list : null
 }
@@ -57,6 +66,7 @@ export default async function DashboardPage() {
     educationCount: profile?._count.education ?? 0,
     skillCount: profile?._count.skills ?? 0,
     evidenceCount: profile?._count.evidence ?? 0,
+    hasCapabilityProfile: !!profile?.capabilityProfile,
   })
 
   // --- Recommended jobs: top matches by score, else newest active jobs ---
@@ -159,6 +169,7 @@ export default async function DashboardPage() {
         <CareerSnapshot
           primaryRole={cap?.primaryRole ?? null}
           strengths={normalizeStrengths(cap?.strengths)}
+          overallScore={cap?.overallScore ?? null}
           lastAnalyzedAt={cap?.lastAnalyzedAt ?? null}
         />
         <RecommendedJobs jobs={jobs} />

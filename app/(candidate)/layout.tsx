@@ -18,6 +18,7 @@ export default async function CandidateLayout({
   const profile = await prisma.candidateProfile.findUnique({
     where: { userId: session.user.id },
     include: {
+      capabilityProfile: { select: { id: true } },
       _count: {
         select: {
           experiences: true,
@@ -37,6 +38,7 @@ export default async function CandidateLayout({
     educationCount: profile?._count.education ?? 0,
     skillCount: profile?._count.skills ?? 0,
     evidenceCount: profile?._count.evidence ?? 0,
+    hasCapabilityProfile: !!profile?.capabilityProfile,
   })
 
   return (

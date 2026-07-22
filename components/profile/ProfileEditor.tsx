@@ -79,6 +79,7 @@ export function ProfileEditor({ initial }: { initial: ProfileInitial }) {
     educationCount: education.length,
     skillCount: skills.length,
     evidenceCount: initial.evidenceCount,
+    hasCapabilityProfile: initial.hasCapabilityProfile,
   })
 
   // Debounced bio auto-save.

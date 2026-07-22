@@ -35,4 +35,5 @@ export interface ProfileInitial {
   education: EducationDTO[]
   skills: SkillDTO[]
   evidenceCount: number
+  hasCapabilityProfile: boolean
 }

@@ -12,6 +12,7 @@ export async function recalculateProfileStrength(
   const profile = await prisma.candidateProfile.findUnique({
     where: { id: profileId },
     include: {
+      capabilityProfile: { select: { id: true } },
       _count: {
         select: {
           experiences: true,
@@ -32,6 +33,7 @@ export async function recalculateProfileStrength(
     educationCount: profile._count.education,
     skillCount: profile._count.skills,
     evidenceCount: profile._count.evidence,
+    hasCapabilityProfile: !!profile.capabilityProfile,
   })
 
   await prisma.candidateProfile.update({

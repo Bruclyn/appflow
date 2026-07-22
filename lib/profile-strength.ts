@@ -21,7 +21,12 @@ export interface ProfileStrengthInput {
   educationCount: number
   skillCount: number
   evidenceCount: number
+  /** Analyzed candidates earn a bonus on top of the checklist score. */
+  hasCapabilityProfile?: boolean
 }
+
+/** Bonus applied once a candidate has an AI capability profile. */
+export const ANALYZED_BONUS = 10
 
 /**
  * Single source of truth for profile completion. Used by the candidate layout,
@@ -42,7 +47,11 @@ export function computeProfileStrength(
   ]
 
   const completedCount = items.filter((i) => i.complete).length
-  const strength = Math.round((completedCount / items.length) * 100)
+  const base = Math.round((completedCount / items.length) * 100)
+  const strength = Math.min(
+    100,
+    base + (input.hasCapabilityProfile ? ANALYZED_BONUS : 0),
+  )
 
   return { strength, items, completedCount, totalCount: items.length }
 }

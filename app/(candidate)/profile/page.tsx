@@ -15,6 +15,7 @@ export default async function ProfilePage() {
       experiences: { orderBy: { startDate: 'desc' } },
       education: { orderBy: { startDate: 'desc' } },
       skills: { orderBy: { createdAt: 'asc' } },
+      capabilityProfile: { select: { id: true } },
       _count: { select: { evidence: true } },
     },
   })
@@ -51,6 +52,7 @@ export default async function ProfilePage() {
       category: s.category,
     })),
     evidenceCount: profile._count.evidence,
+    hasCapabilityProfile: !!profile.capabilityProfile,
   }
 
   return <ProfileEditor initial={initial} />
