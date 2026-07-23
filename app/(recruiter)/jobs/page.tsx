@@ -1,10 +1,12 @@
-import { RecruiterPlaceholder } from '@/components/recruiter/Placeholder'
+import { redirect } from 'next/navigation'
+import { getRecruiterContext } from '@/lib/recruiter-api'
+import { listRecruiterJobs } from '@/lib/recruiter-serializers'
+import { JobsList } from '@/components/recruiter/JobsList'
 
-export default function RecruiterJobsPage() {
-  return (
-    <RecruiterPlaceholder
-      title="My Jobs"
-      message="Job management is coming up in this sprint."
-    />
-  )
+export default async function RecruiterJobsPage() {
+  const ctx = await getRecruiterContext()
+  if (!ctx.ok) redirect('/login')
+
+  const jobs = await listRecruiterJobs(ctx.profileId)
+  return <JobsList initialJobs={jobs} />
 }

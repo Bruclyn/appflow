@@ -100,6 +100,43 @@ export function serializeJobWithApplicants(job: JobWithApplicants): SerializedJo
   }
 }
 
+// --- job list --------------------------------------------------------------
+
+export interface JobSummary {
+  id: string
+  title: string
+  location: string | null
+  jobType: string | null
+  salaryMin: number | null
+  salaryMax: number | null
+  isActive: boolean
+  createdAt: string
+  applicantCount: number
+  strongMatchCount: number
+}
+
+/** List a recruiter's jobs with applicant + strong-match counts. */
+export async function listRecruiterJobs(recruiterId: string): Promise<JobSummary[]> {
+  const jobs = await prisma.job.findMany({
+    where: { recruiterId },
+    orderBy: { createdAt: 'desc' },
+    include: { applications: { select: { matchScore: true } } },
+  })
+
+  return jobs.map((job) => ({
+    id: job.id,
+    title: job.title,
+    location: job.location,
+    jobType: job.jobType,
+    salaryMin: job.salaryMin,
+    salaryMax: job.salaryMax,
+    isActive: job.isActive,
+    createdAt: job.createdAt.toISOString(),
+    applicantCount: job.applications.length,
+    strongMatchCount: job.applications.filter((a) => (a.matchScore ?? 0) >= 80).length,
+  }))
+}
+
 // --- candidate intelligence ------------------------------------------------
 
 type CandidateFull = Prisma.CandidateProfileGetPayload<{
@@ -119,6 +156,7 @@ export interface GithubEvidenceSummary {
 }
 
 export interface MatchAnalysisView {
+  applicationId: string
   jobId: string
   jobTitle: string
   company: string | null
@@ -181,6 +219,7 @@ export function serializeCandidateIntelligence(
 
   const match: MatchAnalysisView | null = application
     ? {
+        applicationId: application.id,
         jobId: application.jobId,
         jobTitle: application.job.title,
         company: application.job.recruiter.companyName ?? null,
