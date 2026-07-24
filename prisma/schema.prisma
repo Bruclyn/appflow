@@ -200,6 +200,7 @@ model Application {
   matchCategory    String?
   strengthAreas    Json?
   verifyAreas      Json?
+  gapAreas         Json?
   alternativeRoles Json?
   aiExplanation    String?           @db.Text
   analyzedAt       DateTime?

@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { computeProfileStrength } from '@/lib/profile-strength'
+import { buildJobList } from '@/lib/candidate-jobs'
 import { WelcomeBanner } from '@/components/dashboard/WelcomeBanner'
 import { ProfileStrengthCard } from '@/components/dashboard/ProfileStrengthCard'
 import { CareerSnapshot } from '@/components/dashboard/CareerSnapshot'
@@ -69,38 +70,19 @@ export default async function DashboardPage() {
     hasCapabilityProfile: !!profile?.capabilityProfile,
   })
 
-  // --- Recommended jobs: top matches by score, else newest active jobs ---
+  // --- Recommended jobs: real match scores from the matching engine ---
   let jobs: JobMatch[] = []
-  if (profile) {
-    const apps = await prisma.application.findMany({
-      where: { candidateId: profile.id },
-      orderBy: { matchScore: 'desc' },
-      take: 3,
-      include: { job: { include: { recruiter: true } } },
-    })
-    if (apps.length > 0) {
-      jobs = apps.map((a) => ({
-        id: a.job.id,
-        title: a.job.title,
-        company: a.job.recruiter.companyName,
-        matchScore: a.matchScore,
-        reason: a.matchCategory,
-      }))
-    } else {
-      const active = await prisma.job.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: 'desc' },
-        take: 3,
-        include: { recruiter: true },
-      })
-      jobs = active.map((j) => ({
-        id: j.id,
-        title: j.title,
-        company: j.recruiter.companyName,
-        matchScore: null,
-        reason: null,
-      }))
-    }
+  const hasCapability =
+    !!profile?.capabilityProfile && profile.capabilityProfile.overallScore != null
+  if (profile && hasCapability) {
+    const list = await buildJobList(profile.id)
+    jobs = list.slice(0, 3).map((j) => ({
+      id: j.id,
+      title: j.title,
+      company: j.company,
+      matchScore: j.matchScore,
+      reason: j.topCompetencies.slice(0, 2).join(' · ') || null,
+    }))
   }
 
   // --- Recent activity synthesized from evidence + applications + profile edits ---

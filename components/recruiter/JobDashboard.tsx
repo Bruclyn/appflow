@@ -3,10 +3,11 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Users, Sparkles, CheckCircle2, CalendarClock, Pencil } from 'lucide-react'
+import { ArrowLeft, Users, Sparkles, CheckCircle2, CalendarClock, Pencil, RefreshCw } from 'lucide-react'
 import { useToast } from '@/components/ui/ToastProvider'
 import { apiRequest } from '@/lib/api-client'
 import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { StatCard } from '@/components/recruiter/StatCard'
 import { cn } from '@/lib/utils'
@@ -49,6 +50,7 @@ export function JobDashboard({ job }: { job: SerializedJob }) {
   const [isActive, setIsActive] = useState(job.isActive)
   const [filter, setFilter] = useState<Filter>('all')
   const [sort, setSort] = useState<Sort>('score')
+  const [reanalyzing, setReanalyzing] = useState(false)
 
   const maxDist = Math.max(1, ...Object.values(job.distribution))
 
@@ -74,6 +76,22 @@ export function JobDashboard({ job }: { job: SerializedJob }) {
       router.refresh()
     } catch (e) {
       toast.error('Could not update job', (e as Error).message)
+    }
+  }
+
+  async function reanalyzeAll() {
+    setReanalyzing(true)
+    try {
+      const res = await apiRequest<{ updated: number; total: number }>(
+        'POST',
+        `/api/recruiter/jobs/${job.id}/match-all`,
+      )
+      toast.success('Re-analysis complete', `Updated ${res.updated} of ${res.total} applicants.`)
+      router.refresh()
+    } catch (e) {
+      toast.error('Could not re-analyze', (e as Error).message)
+    } finally {
+      setReanalyzing(false)
     }
   }
 
@@ -110,6 +128,12 @@ export function JobDashboard({ job }: { job: SerializedJob }) {
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          {job.stats.total > 0 && (
+            <Button variant="ai" isLoading={reanalyzing} onClick={reanalyzeAll} className="h-10">
+              <RefreshCw className="h-4 w-4" />
+              Re-analyze All
+            </Button>
+          )}
           <Link
             href={`/recruiter/jobs/${job.id}/edit`}
             className="inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"

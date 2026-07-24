@@ -9,6 +9,7 @@ import {
   Link as LinkIcon,
   Sparkles,
   Briefcase,
+  ClipboardList,
   Settings,
   LogOut,
 } from 'lucide-react'
@@ -30,6 +31,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: 'Evidence Center', href: '/evidence', icon: LinkIcon },
   { label: 'AI Insights', href: '/insights', icon: Sparkles, glow: true },
   { label: 'Job Matches', href: '/jobs', icon: Briefcase },
+  { label: 'Applications', href: '/applications', icon: ClipboardList },
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 

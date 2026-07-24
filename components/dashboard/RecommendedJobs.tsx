@@ -61,7 +61,7 @@ export function RecommendedJobs({ jobs }: { jobs: JobMatch[] }) {
                 <Badge variant="success">{Math.round(job.matchScore)}% Match</Badge>
               )}
               <Link
-                href={`/jobs/${job.id}`}
+                href="/jobs"
                 className="flex-none rounded-full px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
               >
                 View

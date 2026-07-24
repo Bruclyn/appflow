@@ -8,6 +8,7 @@ const CANDIDATE_PREFIXES = [
   '/evidence',
   '/insights',
   '/jobs',
+  '/applications',
   '/settings',
 ]
 const RECRUITER_PREFIXES = ['/recruiter']
@@ -60,6 +61,8 @@ export const config = {
     '/insights/:path*',
     '/jobs',
     '/jobs/:path*',
+    '/applications',
+    '/applications/:path*',
     '/settings',
     '/settings/:path*',
     '/recruiter',
