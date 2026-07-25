@@ -43,7 +43,9 @@ export function ExperienceSection({
       </div>
 
       {experiences.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500">No experience added yet.</p>
+        <p className="mt-4 text-sm text-slate-500">
+          Add your first experience to show your career journey.
+        </p>
       ) : (
         <ul className="mt-4 space-y-3">
           {experiences.map((exp) => (

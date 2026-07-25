@@ -160,11 +160,23 @@ export function JobDiscovery({
       {/* List */}
       {jobs.length === 0 ? (
         <Card className="p-8 text-center text-sm text-slate-500">
-          No jobs posted yet. Check back soon.
+          No opportunities posted yet. Check back soon.
         </Card>
       ) : visible.length === 0 ? (
-        <Card className="p-8 text-center text-sm text-slate-500">
-          No jobs match your filters. Try adjusting your search.
+        <Card className="flex flex-col items-center gap-3 p-8 text-center">
+          <p className="text-sm text-slate-500">
+            No jobs match your search. Try different filters.
+          </p>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearch('')
+              setType('All')
+            }}
+          >
+            Clear Filters
+          </Button>
         </Card>
       ) : (
         <div className="space-y-3">

@@ -98,12 +98,23 @@ export function JobsList({ initialJobs }: { initialJobs: JobSummary[] }) {
       </div>
 
       {visible.length === 0 ? (
-        <Card className="p-8 text-center text-sm text-slate-500">
-          {filter === 'closed'
-            ? 'No closed jobs.'
-            : filter === 'active'
-              ? 'No active jobs. Post a job to start receiving candidates.'
-              : 'No jobs yet. Post your first job to start receiving candidates.'}
+        <Card className="flex flex-col items-center gap-3 p-8 text-center">
+          <p className="text-sm text-slate-500">
+            {filter === 'closed'
+              ? 'No closed jobs.'
+              : filter === 'active'
+                ? 'No active jobs. Post a job to start receiving candidates.'
+                : 'You have not posted any jobs yet.'}
+          </p>
+          {filter !== 'closed' && (
+            <Link
+              href="/recruiter/jobs/new"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-primary px-5 text-sm font-semibold text-white transition hover:bg-primary-dark"
+            >
+              <Plus className="h-4 w-4" />
+              Post a Job
+            </Link>
+          )}
         </Card>
       ) : (
         <div className="space-y-3">

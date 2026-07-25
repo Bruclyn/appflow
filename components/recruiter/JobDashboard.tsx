@@ -213,8 +213,10 @@ export function JobDashboard({ job }: { job: SerializedJob }) {
       {visible.length === 0 ? (
         <Card className="p-8 text-center text-sm text-slate-500">
           {applicants.length === 0
-            ? 'No applications yet. Share your job posting to start receiving candidates.'
-            : 'No candidates match this filter.'}
+            ? 'No applications yet. Share your job link to start receiving candidates.'
+            : filter === 'strong'
+              ? 'No strong matches yet. More candidates may apply soon.'
+              : 'No candidates match this filter.'}
         </Card>
       ) : (
         <div className="space-y-3">

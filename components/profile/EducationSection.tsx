@@ -43,7 +43,7 @@ export function EducationSection({
       </div>
 
       {education.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500">No education added yet.</p>
+        <p className="mt-4 text-sm text-slate-500">Add your education background.</p>
       ) : (
         <ul className="mt-4 space-y-3">
           {education.map((edu) => (

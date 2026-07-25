@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
-import { Tag, X } from 'lucide-react'
+import { Plus, Tag, X } from 'lucide-react'
 import { suggestedSkillsFor } from '@/lib/career-fields'
 import type { SkillDTO } from './types'
 
@@ -22,6 +22,7 @@ export function SkillsSection({
   onRemove,
 }: SkillsSectionProps) {
   const [input, setInput] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const atLimit = skills.length >= MAX_SKILLS
   const existing = new Set(skills.map((s) => s.name.toLowerCase()))
@@ -64,7 +65,19 @@ export function SkillsSection({
       </div>
 
       {skills.length === 0 ? (
-        <p className="mt-4 text-sm text-slate-500">No skills added yet.</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <p className="text-sm text-slate-500">
+            Add skills to help AppFlow match you accurately.
+          </p>
+          <button
+            type="button"
+            onClick={() => inputRef.current?.focus()}
+            className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-primary hover:text-primary"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add Skill
+          </button>
+        </div>
       ) : (
         <div className="mt-4 space-y-4">
           {[...groups.entries()].map(([category, list]) => (
@@ -96,6 +109,7 @@ export function SkillsSection({
       )}
 
       <input
+        ref={inputRef}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
