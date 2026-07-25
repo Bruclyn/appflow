@@ -1,10 +1,16 @@
-import { RecruiterPlaceholder } from '@/components/recruiter/Placeholder'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { AccountSettingsCard } from '@/components/settings/AccountSettingsCard'
 
-export default function RecruiterSettingsPage() {
+export default async function RecruiterSettingsPage() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) redirect('/login')
+
   return (
-    <RecruiterPlaceholder
-      title="Settings"
-      message="Recruiter settings are coming in a later sprint."
+    <AccountSettingsCard
+      name={session.user.name ?? 'You'}
+      email={session.user.email ?? ''}
     />
   )
 }

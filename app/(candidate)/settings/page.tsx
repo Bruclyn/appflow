@@ -1,10 +1,16 @@
-export default function SettingsPage() {
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { AccountSettingsCard } from '@/components/settings/AccountSettingsCard'
+
+export default async function SettingsPage() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user) redirect('/login')
+
   return (
-    <div>
-      <h1 className="font-display text-2xl font-bold text-slate-900">Settings</h1>
-      <p className="mt-2 text-slate-500">
-        Account settings — coming in a later sprint.
-      </p>
-    </div>
+    <AccountSettingsCard
+      name={session.user.name ?? 'You'}
+      email={session.user.email ?? ''}
+    />
   )
 }
