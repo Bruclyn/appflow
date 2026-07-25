@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { getRecruiterContext, ok, fail } from '@/lib/recruiter-api'
 import { companySchema } from '@/lib/recruiter-schemas'
@@ -24,7 +25,7 @@ export async function PUT(req: Request) {
       ...(data.description !== undefined ? { description: data.description } : {}),
       ...(data.whatWeLookFor !== undefined ? { whatWeLookFor: data.whatWeLookFor } : {}),
       ...(data.preferredJobTypes !== undefined
-        ? { preferredJobTypes: data.preferredJobTypes }
+        ? { preferredJobTypes: data.preferredJobTypes ?? Prisma.JsonNull }
         : {}),
       ...(data.hiringSpeed !== undefined ? { hiringSpeed: data.hiringSpeed } : {}),
       ...(data.teamSizeHiring !== undefined ? { teamSizeHiring: data.teamSizeHiring } : {}),
