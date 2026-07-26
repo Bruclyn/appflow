@@ -4,8 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { getCandidateContext, ok, fail } from '@/lib/candidate-api'
 import { recalculateProfileStrength } from '@/lib/profile-strength-service'
 
+// Intentionally minimal: store the portfolio URL string exactly as entered.
+// We never fetch it or validate reachability/format here — the AI analysis step
+// handles interpretation later, so an offline or scheme-less URL still saves.
 const portfolioSchema = z.object({
-  url: z.string().url('Enter a valid URL (including https://)').max(300),
+  url: z.string().trim().min(1, 'Enter your portfolio URL').max(300),
 })
 
 export async function PUT(req: Request) {
