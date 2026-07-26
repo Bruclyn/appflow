@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
+import type { Experience, Education, CandidateSkill } from '@prisma/client'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProfileEditor } from '@/components/profile/ProfileEditor'
@@ -28,7 +29,7 @@ export default async function ProfilePage() {
     careerField: profile.careerField ?? '',
     bio: profile.bio ?? '',
     profilePhoto: profile.profilePhoto,
-    experiences: profile.experiences.map((e) => ({
+    experiences: profile.experiences.map((e: Experience) => ({
       id: e.id,
       company: e.company,
       role: e.role,
@@ -37,7 +38,7 @@ export default async function ProfilePage() {
       current: e.current,
       description: e.description,
     })),
-    education: profile.education.map((e) => ({
+    education: profile.education.map((e: Education) => ({
       id: e.id,
       institution: e.institution,
       degree: e.degree,
@@ -46,7 +47,7 @@ export default async function ProfilePage() {
       endDate: e.endDate?.toISOString() ?? null,
       current: e.current,
     })),
-    skills: profile.skills.map((s) => ({
+    skills: profile.skills.map((s: CandidateSkill) => ({
       id: s.id,
       name: s.name,
       category: s.category,
