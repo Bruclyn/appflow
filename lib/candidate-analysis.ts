@@ -9,6 +9,7 @@ import type {
   StrengthItem,
   WorkPatternsData,
 } from '@/components/insights/types'
+import { isMockAi, mockCandidateAnalysis } from './mock-ai'
 
 /** The analysis Claude returns (the persisted insight minus its timestamp). */
 export type CandidateAnalysisResult = Omit<CapabilityInsight, 'lastAnalyzedAt'>
@@ -345,6 +346,8 @@ export function parseCandidateAnalysis(text: string): CandidateAnalysisResult {
 export async function analyzeCandidate(
   input: CandidateAnalysisInput,
 ): Promise<CandidateAnalysisResult> {
+  if (isMockAi()) return mockCandidateAnalysis(input)
+
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error(
       'ANTHROPIC_API_KEY is not configured. Add it to your environment to run analysis.',

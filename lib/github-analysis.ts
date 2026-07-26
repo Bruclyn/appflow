@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import type { GitHubRepo } from './github'
+import { isMockAi, mockGitHubAnalysis } from './mock-ai'
 
 export interface DetectedSkill {
   name: string
@@ -75,6 +76,8 @@ export async function analyzeGitHubEvidence(
   repositories: GitHubRepo[],
   username: string,
 ): Promise<GitHubAnalysisResult> {
+  if (isMockAi()) return mockGitHubAnalysis(repositories, username)
+
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error('ANTHROPIC_API_KEY is not configured. Add it to your environment to run analysis.')
   }

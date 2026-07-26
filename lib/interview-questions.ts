@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { isMockAi, mockInterviewQuestions } from './mock-ai'
 
 export interface TechnicalQuestion {
   question: string
@@ -140,6 +141,8 @@ export async function generateInterviewQuestions(
   candidate: InterviewCandidateProfile,
   jobCompetencies: string[],
 ): Promise<InterviewQuestions> {
+  if (isMockAi()) return mockInterviewQuestions(candidate, jobCompetencies)
+
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error(
       'ANTHROPIC_API_KEY is not configured. Add it to your environment to run analysis.',

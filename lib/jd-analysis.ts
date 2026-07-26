@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { isMockAi, mockJobDescriptionAnalysis } from './mock-ai'
 
 export type CompetencyImportance = 'Critical' | 'Important' | 'Nice to Have'
 
@@ -143,6 +144,8 @@ export async function analyzeJobDescription(
   description: string,
   requirements?: string | null,
 ): Promise<JobDescriptionAnalysis> {
+  if (isMockAi()) return mockJobDescriptionAnalysis(title, description, requirements)
+
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error(
       'ANTHROPIC_API_KEY is not configured. Add it to your environment to run analysis.',
